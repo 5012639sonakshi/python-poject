@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cost-Aware Active Learning for Fraud Detection</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Top Hero / Home Section -->
+  <header class="hero">
+    <div class="container hero-content">
+      <span class="badge">College Project Demo</span>
+      <h1>Cost-Aware Active Learning for Fraud Detection</h1>
+      <p class="subtitle">
+        Banks process thousands of payments every day and cannot afford to check every single one.
+        This demo shows how a smart computer model picks only the <strong>most useful and cheapest</strong>
+        transactions to check—catching fraud accurately while saving time and money.
+      </p>
+      <div class="hero-actions">
+        <button id="runDemoBtn" class="btn-primary" type="button">
+          Run demo
+        </button>
+        <p id="statusText" class="status-text" aria-live="polite">
+          Click the button to simulate 12,000 transactions and compare 3 checking methods.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <!-- Results Area (hidden until user clicks Run demo) -->
+    <section id="resultsSection" class="results-section hidden" aria-label="Simulation Results">
+      <!-- Quick Simulation Summary Strip -->
+      <div class="summary-strip" id="summaryStrip">
+        <div class="summary-pill">
+          <span class="pill-label">Transactions</span>
+          <strong id="statTotal">12,000</strong>
+        </div>
+        <div class="summary-pill">
+          <span class="pill-label">Fraud Rate</span>
+          <strong id="statFraudRate">~5.0%</strong>
+        </div>
+        <div class="summary-pill">
+          <span class="pill-label">Checking Cost</span>
+          <strong>1 to 6 units</strong>
+        </div>
+        <div class="summary-pill">
+          <span class="pill-label">Total Budget</span>
+          <strong id="statBudget">450 units</strong>
+        </div>
+      </div>
+
+      <!-- 3 Big Result Cards -->
+      <div class="cards-grid">
+        <article class="result-card highlight-card">
+          <p class="card-label">Labeling Cost Saved</p>
+          <p class="card-value" id="cardCostSaved">--</p>
+          <p class="card-detail" id="cardCostDetail">
+            Money saved to reach the same fraud detection score.
+          </p>
+        </article>
+
+        <article class="result-card">
+          <p class="card-label">Fewer False Alarms</p>
+          <p class="card-value" id="cardFalseAlarms">--</p>
+          <p class="card-detail" id="cardAlarmDetail">
+            Reduction in normal transactions wrongly flagged as fraud.
+          </p>
+        </article>
+
+        <article class="result-card">
+          <p class="card-label">More Transactions Checked</p>
+          <p class="card-value" id="cardMoreChecked">--</p>
+          <p class="card-detail" id="cardCheckedDetail">
+            Extra transactions reviewed for the exact same budget.
+          </p>
+        </article>
+      </div>
+
+      <!-- Line Graph Card -->
+      <section class="chart-card" aria-label="Fraud Detector Performance Chart">
+        <div class="chart-header">
+          <div>
+            <h2>How Fast the Fraud Detector Learns</h2>
+            <p class="chart-subtitle">
+              Higher is better: shows fraud detection quality (AUC %) as more checking budget is spent.
+            </p>
+          </div>
+          <!-- Legend for the 3 lines -->
+          <div class="chart-legend">
+            <span class="legend-item">
+              <span class="legend-swatch swatch-cost-aware"></span>
+              Most Confusing per Cost
+            </span>
+            <span class="legend-item">
+              <span class="legend-swatch swatch-confusing"></span>
+              Most Confusing
+            </span>
+            <span class="legend-item">
+              <span class="legend-swatch swatch-random"></span>
+              Random
+            </span>
+          </div>
+        </div>
+
+        <div class="chart-wrapper">
+          <svg
+            id="performanceChart"
+            viewBox="0 0 820 380"
+            role="img"
+            aria-label="Line graph comparing Random, Most Confusing, and Most Confusing per Cost"
+          ></svg>
+          <div id="chartTooltip" class="chart-tooltip hidden"></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- How It Works Section (5 short steps with icons) -->
+    <section class="how-section" aria-label="How It Works">
+      <div class="section-heading">
+        <h2>How It Works</h2>
+        <p>Five simple steps showing how cost-aware active learning saves money.</p>
+      </div>
+
+      <div class="steps-grid">
+        <!-- Step 1 -->
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-number">1</span>
+            <div class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+            </div>
+          </div>
+          <h3>Collect Transactions</h3>
+          <p>Start with 12,000 card payments. Each one has a checking cost between 1 and 6 units.</p>
+        </article>
+
+        <!-- Step 2 -->
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-number">2</span>
+            <div class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.3 4.7-3.3 6H8.3C6.3 13.7 5 11.5 5 9a7 7 0 0 1 7-7z" />
+                <line x1="9" y1="19" x2="15" y2="19" />
+                <line x1="10" y1="22" x2="14" y2="22" />
+              </svg>
+            </div>
+          </div>
+          <h3>Train Starter Model</h3>
+          <p>Check a tiny starter batch of payments so the detector learns its first clues.</p>
+        </article>
+
+        <!-- Step 3 -->
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-number">3</span>
+            <div class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="3" x2="12" y2="21" />
+                <path d="M5 7h14" />
+                <path d="M3 14l2-7 2 7a2 2 0 0 1-4 0z" />
+                <path d="M17 14l2-7 2 7a2 2 0 0 1-4 0z" />
+              </svg>
+            </div>
+          </div>
+          <h3>Score Value per Dollar</h3>
+          <p>Measure how confused the model is on each transaction, then divide by its cost.</p>
+        </article>
+
+        <!-- Step 4 -->
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-number">4</span>
+            <div class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="5" />
+                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+              </svg>
+            </div>
+          </div>
+          <h3>Pick Smart Checks</h3>
+          <p>Investigate only the most confusing, lowest-cost transactions first.</p>
+        </article>
+
+        <!-- Step 5 -->
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-number">5</span>
+            <div class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+            </div>
+          </div>
+          <h3>Update &amp; Catch Fraud</h3>
+          <p>Retrain the detector after each batch—getting strong accuracy for far less money.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Note about Simulated Data -->
+  <footer class="footer">
+    <div class="container">
+      <p class="disclaimer">
+        <strong>Note:</strong> All results, transactions, and costs shown in this app come from
+        simulated (fake) data created for educational demonstration purposes.
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
